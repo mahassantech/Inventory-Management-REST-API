@@ -5,8 +5,10 @@ from .serializers import ProductSerializers
 from rest_framework.response import Response
 from rest_framework import status
 from django.shortcuts import get_object_or_404
+from rest_framework.permissions import IsAuthenticated
 
 class ProductView(APIView):
+    permission_classes=[IsAuthenticated]
     def get(self,request):
         product_list=Product.objects.all()
         serializer=ProductSerializers(product_list,many=True)
@@ -20,6 +22,7 @@ class ProductView(APIView):
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
     
 class ProductDetailView(APIView):
+    permission_classes=[IsAuthenticated]
     def get(self,request,pk):
         product_list=get_object_or_404(Product,pk=pk)
         serializer=ProductSerializers(product_list)
