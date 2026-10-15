@@ -20,9 +20,9 @@ class ProductView(APIView):
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
     
 class ProductDetailView(APIView):
-    def get(self,request):
-        product_list=Product.objects.all()
-        serializer=ProductSerializers(product_list,many=True)
+    def get(self,request,pk):
+        product_list=get_object_or_404(Product,pk=pk)
+        serializer=ProductSerializers(product_list)
         return Response (serializer.data) 
     
     def put(self,request,pk):
@@ -32,3 +32,11 @@ class ProductDetailView(APIView):
             serializer.save()
             return Response(serializer.data)
         return Response (serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+    
+    def patch(self,request,pk):
+        product=get_object_or_404(Product, pk=pk)
+        serializer=ProductSerializers(product, data=request.data, partial=True )
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
