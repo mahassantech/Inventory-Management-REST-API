@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from categories.models import Category
 
 # Create your models here.
 
@@ -11,6 +12,13 @@ class Product(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     created_by=models.ForeignKey(User,on_delete=models.CASCADE,related_name='products',null=True,
     blank=True)
+    category = models.ForeignKey(
+    Category,
+    on_delete=models.SET_NULL,
+    null=True,
+    blank=True,
+    related_name='products'
+)
 
     def __str__(self):
         return self.name
