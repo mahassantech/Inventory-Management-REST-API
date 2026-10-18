@@ -11,6 +11,11 @@ class ProductView(APIView):
     permission_classes=[IsAuthenticated]
     def get(self,request):
         product_list=Product.objects.all()
+        search_query=request.query_params.get('search')
+        if search_query:
+            product_list=product_list.filter(
+                name__icontains=search_query
+            )
         serializer=ProductSerializers(product_list,many=True)
         return Response (serializer.data) 
     
