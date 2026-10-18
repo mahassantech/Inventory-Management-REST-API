@@ -24,12 +24,12 @@ class ProductView(APIView):
 class ProductDetailView(APIView):
     permission_classes=[IsAuthenticated]
     def get(self,request,pk):
-        product_list=get_object_or_404(Product,pk=pk)
+        product_list=get_object_or_404(Product,pk=pk,created_by=request.user)
         serializer=ProductSerializers(product_list)
         return Response (serializer.data) 
     
     def put(self,request,pk):
-        product = get_object_or_404(Product,pk=pk)
+        product = get_object_or_404(Product,pk=pk,created_by=request.user)
         serializer = ProductSerializers(product, data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -37,7 +37,7 @@ class ProductDetailView(APIView):
         return Response (serializer.errors,status=status.HTTP_400_BAD_REQUEST)
     
     def patch(self,request,pk):
-        product=get_object_or_404(Product, pk=pk)
+        product=get_object_or_404(Product, pk=pk,created_by=request.user)
         serializer=ProductSerializers(product, data=request.data, partial=True )
         if serializer.is_valid():
             serializer.save()
@@ -45,6 +45,6 @@ class ProductDetailView(APIView):
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
     
     def delete(self,request,pk):
-        product=get_object_or_404(Product, pk=pk)
+        product=get_object_or_404(Product, pk=pk,created_by=request.user)
         product.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
