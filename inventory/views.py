@@ -16,6 +16,12 @@ class ProductView(APIView):
             product_list=product_list.filter(
                 name__icontains=search_query
             )
+            
+        category_name=request.query_params.get('category')
+        if category_name:
+            product_list=product_list.filter(
+                category__name__iexact=category_name
+            )
         serializer=ProductSerializers(product_list,many=True)
         return Response (serializer.data) 
     
